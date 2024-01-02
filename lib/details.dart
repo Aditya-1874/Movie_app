@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:my_first_flutter/actors.dart';
+// import 'package:my_first_flutter/actors.dart';
 import 'package:my_first_flutter/model.dart';
+import 'package:my_first_flutter/watchlist.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'constants.dart';
 
-
-
-class DetailsScreen extends StatelessWidget {
+class DetailsScreen extends StatefulWidget {
   const DetailsScreen ({super.key, required this.movies});
 
   final Movie movies;
 
+  @override
+  State<DetailsScreen> createState() => _DetailsScreenState();
+}
+
+class _DetailsScreenState extends State<DetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +42,7 @@ class DetailsScreen extends StatelessWidget {
             expandedHeight: 500,
             floating: true,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(movies.title,
+              title: Text(widget.movies.title,
                   // textAlign: TextAlign.right,
                   style: const TextStyle(
                       color: Colors.white,
@@ -48,7 +53,7 @@ class DetailsScreen extends StatelessWidget {
                   bottomLeft: Radius.circular(24),
                   bottomRight: Radius.circular(24)
                 ),
-                child: Image.network(Constants.imagepath + movies.posterPath,
+                child: Image.network(Constants.imagepath + widget.movies.posterPath,
                     fit: BoxFit.cover,
                     filterQuality: FilterQuality.high,),
               ),
@@ -64,7 +69,7 @@ class DetailsScreen extends StatelessWidget {
                       textAlign: TextAlign.left,
                       style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),)),
                 const SizedBox(height: 15,),
-                Text(movies.overview,
+                Text(widget.movies.overview,
                       style: const
                       TextStyle( fontSize: 21, fontWeight: FontWeight.w300, color: Colors.white),),
                 const SizedBox(height: 15,),
@@ -80,7 +85,7 @@ class DetailsScreen extends StatelessWidget {
                         children:  [
                           const Text('Release Date: ',
                             style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),),
-                          Text(movies.releaseDate,
+                          Text(widget.movies.releaseDate,
                             style: const TextStyle( color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),)
                         ],
                       ),
@@ -101,18 +106,41 @@ class DetailsScreen extends StatelessWidget {
                               Icon(Icons.star, color: Colors.yellow,)
                             ],
                           ),
-                          Text('${movies.voteAverage}/10',
+                          Text('${widget.movies.voteAverage}/10',
                             style: const TextStyle( color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),)
                         ],
                       ),
                     )
                   ],
                 ),
-                const SizedBox(height: 25,),
-                Actors(movies.movieId)
+                const SizedBox(height: 15,),
+                // Actors(movies.movieId),
+                // IconButton(onPressed: (){setState(() {
+                //   Datastore().setValue(widget.movies.title);
+                // });}, icon: const Icon(Icons.favorite)),
+                
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(16),),
+                      child: Row(
+                        children: [
+                          const Text('Add to Watchlist', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),),
+                          ScopedModelDescendant<Datastore>(builder: (context, child, model){
+                                return IconButton(onPressed: (){model.setValue(widget.movies.title);},
+                                    icon: const Icon(Icons.favorite, color: Colors.yellow,));
+                              }),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
 
               ],
-            ),
+            )
           ),
         ],
       ),

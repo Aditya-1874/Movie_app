@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
    int _selectedIndex = 0;
-  static const List<Widget> _classOptions = <Widget>[
+  static List<Widget> _classOptions = <Widget>[
     HomePage(),Watchlist(),Settings()
   ];
 
@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                 future: trendingMovies,
                 builder: (context,snapshot){
                   if(snapshot.hasError){
-                    return Center(child: Text(snapshot.error.toString()));
+                    return Center(child: Text(snapshot.error.toString(), style: TextStyle(color: Colors.white),));
                   } else if (snapshot.hasData){
                     return Carousel( snapshot: snapshot,);
                   } else{
