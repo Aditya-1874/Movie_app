@@ -18,8 +18,9 @@ class LoginPage extends StatelessWidget {
       body:  SafeArea(
         child:  Center(
           child:  Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center,
             children:  [
+              const SizedBox(height: 10,),
               const Icon(Icons.lock,
                  size: 80,
                  shadows: <Shadow>[Shadow(color: Colors.black, blurRadius: 10.0)],
@@ -40,7 +41,7 @@ class LoginPage extends StatelessWidget {
                 obscureText: false,
               ),
 
-              const SizedBox(height:10),
+              const SizedBox(height:5),
 
 
 
@@ -101,8 +102,8 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height:10),
-              
+              const SizedBox(height:5),
+
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -114,7 +115,7 @@ class LoginPage extends StatelessWidget {
                 ],
               ),
 
-              const SizedBox(height:10),
+              const SizedBox(height:5),
 
 
               const Row(

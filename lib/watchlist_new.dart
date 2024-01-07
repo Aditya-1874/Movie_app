@@ -2,45 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Watchlist extends StatefulWidget {
-
-   const Watchlist({super.key});
+class WatchNew extends StatefulWidget {
+  const WatchNew({super.key});
 
   @override
-  State<Watchlist> createState() => WatchlistState();
+  State<WatchNew> createState() => _WatchNewState();
 }
-class WatchlistState extends State<Watchlist> {
-  List<String> newlist =[];
-  // late SharedPreferences sp;
-  loadSharedPreferences ()async{
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    readData();
-  }
+
+class _WatchNewState extends State<WatchNew> {
   @override
   void initState() {
     // TODO: implement initState
+    load();
     super.initState();
-    loadSharedPreferences();
   }
-  saveData()async{
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    sp.setStringList('Watchlist', Datastore().watchlist);
-    readData();
-  }
-  readData()async{
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    newlist = (await sp.getStringList('Watchlist'))!;
-    // setState(() {
-    //   Datastore().watchlist = newList;
-    //   print(newList);
-    // });
-    Datastore().watchlist = newlist;
-    print(newlist);
-
-  }
-   @override
+  @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white12,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -71,44 +49,47 @@ class WatchlistState extends State<Watchlist> {
         ),
         centerTitle: true,
       ),
-      body: newlist.isEmpty
+      body: ScopedModel.of<Datastores>(context, rebuildOnChange: true)
+          .watchlist.isEmpty
           ? const Center(child:  Text('Your Watchlist Is Empty !',
-            style: TextStyle(fontSize: 25, color: Colors.white),))
+        style: TextStyle(fontSize: 25, color: Colors.white),))
           : Container(
           padding: const EdgeInsets.all(8.0),
           child: Column(children: <Widget>[
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.only(top: 15),
-                itemCount: newlist.length,
+                itemCount: ScopedModel.of<Datastores>(context,
+                    rebuildOnChange: true)
+                    .total,
                 itemBuilder: (context, index) {
-                  return ScopedModelDescendant<Datastore>(
-                    builder: (context, child, model){
+                  return ScopedModelDescendant<Datastores>(
+                    builder: (context, child, model) {
                       return ListTile(
                         trailing: const Icon(Icons.favorite, color: Colors.red,size: 30,),
-                        title: Text(newlist[index],style:
+                        title: Text(model.watchlist[index],style:
                         const TextStyle(fontSize: 25,color: Colors.white),),
                       );
                     },
                   );
                 },
               ),
-            ),])),);}}
+            ),])),);
+  }
 
-class Datastore extends Model{
-   List<String> watchlist = List.empty(growable: true);
-   int get total => watchlist.length;
-   void setValue (String title,)async{
-     SharedPreferences prefs = await SharedPreferences.getInstance();
-     List<String>? watchlist= await prefs.getStringList('Watchlist') ?? [];
+  void load() async{
+    var pre = await SharedPreferences.getInstance();
+    Datastores().watchlist= pre.getStringList('Watchlist')!;
+  }
+}
+
+class Datastores extends Model{
+  List<String> watchlist = List.empty(growable: true);
+  int get total => watchlist.length;
+  setValue (String title) async {
     watchlist.add(title);
+    var prefs = await SharedPreferences.getInstance();
     prefs.setStringList('Watchlist', watchlist);
-    print('correct');
-    print(watchlist.length);
-    print('adding');
-    WatchlistState().saveData;
-    print('saving');
-    WatchlistState().readData();
     notifyListeners();
   }
 }

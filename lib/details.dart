@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 // import 'package:my_first_flutter/actors.dart';
 import 'package:my_first_flutter/model.dart';
 import 'package:my_first_flutter/watchlist.dart';
+import 'package:my_first_flutter/watchlist_new.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'constants.dart';
 
@@ -15,6 +16,7 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
+  bool favourite = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,10 +130,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         borderRadius: BorderRadius.circular(16),),
                       child: Row(
                         children: [
-                          const Text('Add to Watchlist', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),),
+                          Text( favourite ?'Add to Watchlist' : 'Added to Watchlist',
+                            style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),),
                           ScopedModelDescendant<Datastore>(builder: (context, child, model){
-                                return IconButton(onPressed: (){model.setValue(widget.movies.title);},
-                                    icon: const Icon(Icons.favorite, color: Colors.yellow,));
+                                return IconButton(onPressed: (){
+                                  model.setValue(widget.movies.title);
+                                  setState(() {
+                                    favourite = !favourite;
+                                  });},
+                                    icon: Icon(Icons.favorite,
+                                      color: favourite ?Colors.yellow : Colors.red,));
                               }),
                         ],
                       ),

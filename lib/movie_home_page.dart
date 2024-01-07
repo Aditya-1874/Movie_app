@@ -4,6 +4,7 @@ import 'package:my_first_flutter/carousel_slider.dart';
 import 'package:my_first_flutter/movie_slider.dart';
 import 'package:my_first_flutter/settings.dart';
 import 'package:my_first_flutter/watchlist.dart';
+import 'package:my_first_flutter/watchlist_new.dart';
 import 'model.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,8 +22,8 @@ class _HomePageState extends State<HomePage> {
     });
   }
    int _selectedIndex = 0;
-  static List<Widget> _classOptions = <Widget>[
-    HomePage(),Watchlist(),Settings()
+  static final List<Widget> _classOptions = <Widget>[
+    const HomePage(),const Watchlist(),const Settings()
   ];
 
   late Future<List<Movie>> trendingMovies;
